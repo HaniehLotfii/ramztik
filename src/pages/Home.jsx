@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import CryptoCard from "../components/CryptoCard";
 import { getMarketData } from "../services/api";
-import { FiArrowUp, FiArrowDown, FiFilter } from "react-icons/fi";
+import { GoSortDesc, GoSearch } from "react-icons/go";
+import { CgSortAz, CgSortZa } from "react-icons/cg";
+import { FaDollarSign } from "react-icons/fa";
+import { RiMoneyRupeeCircleLine } from "react-icons/ri";
 
 const Home = () => {
   const [coins, setCoins] = useState([]);
@@ -11,6 +14,8 @@ const Home = () => {
     key: null,
     direction: "desc",
   });
+  const [showInRial, setShowInRial] = useState(false);
+  const exchangeRate = 80000;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -65,6 +70,7 @@ const Home = () => {
   return (
     <div className="p-4 ">
       <div className="flex flex-wrap gap-2 mb-4">
+        <GoSearch className="text-gray-500 dark:text-gray-300 text-xl mt-3" />
         <input
           type="text"
           placeholder="جستجوی ارز..."
@@ -73,8 +79,22 @@ const Home = () => {
           className="flex-1 min-w-[200px] px-4 py-2 rounded-xl border border-gray-300 focus:outline-none focus:ring focus:border-blue-400 dark:bg-gray-800 dark:text-white"
         />
 
+        <label className="flex items-center gap-3 cursor-pointer">
+          <input
+            type="checkbox"
+            className="sr-only peer"
+            checked={showInRial}
+            onChange={() => setShowInRial((prev) => !prev)}
+          />
+          <div className="w-20 h-8 bg-gray-400 rounded-full relative peer-checked:bg-blue-600 transition-colors">
+            <div className="absolute top-1 left-1 w-7 h-6 bg-white rounded-full text-[12px] flex items-center justify-center text-gray-800 transition-all duration-300 peer-checked:translate-x-10">
+              {showInRial ? "﷼" : "$"}
+            </div>
+          </div>
+        </label>
+
         <div className="flex gap-2 w-full sm:w-auto">
-          <FiFilter className="text-gray-500 dark:text-gray-300 text-xl mt-3"></FiFilter>
+          <GoSortDesc className="text-gray-500 dark:text-gray-300 text-xl mt-3"></GoSortDesc>
 
           <button
             onClick={() => handleSortClick("price")}
@@ -82,11 +102,7 @@ const Home = () => {
           >
             قیمت
             {sortConfig.key === "price" &&
-              (sortConfig.direction === "asc" ? (
-                <FiArrowUp />
-              ) : (
-                <FiArrowDown />
-              ))}
+              (sortConfig.direction === "asc" ? <CgSortZa /> : <CgSortAz />)}
           </button>
 
           <button
@@ -95,11 +111,7 @@ const Home = () => {
           >
             تغییرات
             {sortConfig.key === "change" &&
-              (sortConfig.direction === "asc" ? (
-                <FiArrowUp />
-              ) : (
-                <FiArrowDown />
-              ))}
+              (sortConfig.direction === "asc" ? <CgSortZa /> : <CgSortAz />)}
           </button>
         </div>
       </div>
