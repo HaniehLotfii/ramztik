@@ -1,14 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchCoins } from "../redux/slices/coinsSlice";
 import CryptoCard from "../components/CryptoCard";
-import { getMarketData } from "../services/api";
 import { GoSortDesc, GoSearch } from "react-icons/go";
 import { CgSortAz, CgSortZa } from "react-icons/cg";
-import { FaDollarSign } from "react-icons/fa";
-import { RiMoneyRupeeCircleLine } from "react-icons/ri";
 
 const Home = () => {
-  const [coins, setCoins] = useState([]);
-  const [filteredCoins, setFilteredCoins] = useState([]);
+  const dispatch = useDispatch();
+  const { list: coins, loading, error } = useSelector((state) => state.coins);
+
   const [searchTerm, setSearchTerm] = useState("");
   const [sortConfig, setSortConfig] = useState({
     key: null,
@@ -18,19 +18,16 @@ const Home = () => {
   const exchangeRate = 80000;
 
   useEffect(() => {
-    const fetchData = async () => {
-      const data = await getMarketData();
-      setCoins(data);
-      setFilteredCoins(data);
-    };
+    dispatch(fetchCoins());
 
-    fetchData();
+    const intervalId = setInterval(() => {
+      dispatch(fetchCoins());
+    }, 50000);
 
-    const intervalId = setInterval(fetchData, 50000);
     return () => clearInterval(intervalId);
-  }, []);
+  }, [dispatch]);
 
-  useEffect(() => {
+  const filteredCoins = useMemo(() => {
     let results = coins.filter(
       (coin) =>
         coin.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -48,8 +45,8 @@ const Home = () => {
       });
     }
 
-    setFilteredCoins(results);
-  }, [searchTerm, coins, sortConfig]);
+    return results;
+  }, [coins, searchTerm, sortConfig]);
 
   const handleSortClick = (key) => {
     setSortConfig((prev) => {
@@ -68,7 +65,15 @@ const Home = () => {
   };
 
   return (
-    <div className="p-4 ">
+    <div className="p-4">
+      {/* 🔄 لودینگ شناور وقتی دیتا هست */}
+      {loading && coins.length > 0 && (
+        <div className="fixed top-4 right-4 z-50 text-blue-500 animate-spin text-xl">
+          🔄
+        </div>
+      )}
+
+      {/* 🎛️ سرچ، سوییچ و سورت */}
       <div className="flex flex-wrap gap-2 mb-4">
         <GoSearch className="text-gray-500 dark:text-gray-300 text-xl mt-3" />
         <input
@@ -94,11 +99,11 @@ const Home = () => {
         </label>
 
         <div className="flex gap-2 w-full sm:w-auto">
-          <GoSortDesc className="text-gray-500 dark:text-gray-300 text-xl mt-3"></GoSortDesc>
+          <GoSortDesc className="text-gray-500 dark:text-gray-300 text-xl mt-3" />
 
           <button
             onClick={() => handleSortClick("price")}
-            className="px-4 py-2 rounded-xl bg-blue-500 text-white flex items-center justify-center gap-2 w-full sm:w-auto"
+            className="px-4 py-2 rounded-xl bg-blue-500 text-white flex items-center justify-center gap-2"
           >
             قیمت
             {sortConfig.key === "price" &&
@@ -107,7 +112,7 @@ const Home = () => {
 
           <button
             onClick={() => handleSortClick("change")}
-            className="px-4 py-2 rounded-xl bg-green-500 text-white flex items-center justify-center gap-2 w-full sm:w-auto"
+            className="px-4 py-2 rounded-xl bg-green-500 text-white flex items-center justify-center gap-2"
           >
             تغییرات
             {sortConfig.key === "change" &&
@@ -116,17 +121,28 @@ const Home = () => {
         </div>
       </div>
 
+      {error && <p className="text-center text-red-500 mb-4">{error}</p>}
+
+      {/* 🧩 گرید کارت‌ها */}
       <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {filteredCoins.map((coin) => (
-          <CryptoCard
-            key={coin.id}
-            name={coin.name}
-            symbol={coin.symbol}
-            price={coin.current_price.toLocaleString()}
-            change={coin.price_change_percentage_24h?.toFixed(2)}
-            iconUrl={coin.image}
-          />
-        ))}
+        {loading && coins.length === 0 ? (
+          <p className="text-center col-span-full">در حال بارگذاری...</p>
+        ) : (
+          filteredCoins.map((coin) => (
+            <CryptoCard
+              key={coin.id}
+              name={coin.name}
+              symbol={coin.symbol}
+              price={
+                showInRial
+                  ? (coin.current_price * exchangeRate).toLocaleString() + " ﷼"
+                  : coin.current_price.toLocaleString()
+              }
+              change={coin.price_change_percentage_24h?.toFixed(2)}
+              iconUrl={coin.image}
+            />
+          ))
+        )}
       </div>
     </div>
   );

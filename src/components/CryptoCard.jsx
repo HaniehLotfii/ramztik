@@ -1,8 +1,10 @@
-const CryptoCard = ({ name, symbol, price, change, iconUrl }) => {
+import React from "react";
+
+const CryptoCard = React.memo(({ name, symbol, price, change, iconUrl }) => {
   const isPositive = change >= 0;
 
   return (
-    <div className="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow hover:shadow-lg transition-all">
+    <div className="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow hover:shadow-lg transition-all ">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <img src={iconUrl} alt={name} className="w-8 h-8" />
@@ -12,7 +14,7 @@ const CryptoCard = ({ name, symbol, price, change, iconUrl }) => {
           </div>
         </div>
         <div className="text-right">
-          <p className="text-lg font-semibold">${price}</p>
+          <p className="text-lg font-semibold">{price}</p>
           <p
             className={`text-sm ${
               isPositive ? "text-green-500" : "text-red-500"
@@ -25,6 +27,7 @@ const CryptoCard = ({ name, symbol, price, change, iconUrl }) => {
       </div>
     </div>
   );
-};
+});
+console.log("Rendered:", name);
 
 export default CryptoCard;
