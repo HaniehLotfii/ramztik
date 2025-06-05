@@ -1,9 +1,13 @@
 @import "tailwindcss";
 
+body {
+  @apply bg-white text-gray-900 dark:bg-gray-900 dark:text-white;
+}
+
 #root {
-  max-width: 1280px;
   margin: 0 auto;
-  padding: 2rem;
+  padding-right: 3rem;
+  padding-left: 3rem;
   text-align: center;
 }
 

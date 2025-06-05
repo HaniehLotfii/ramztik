@@ -1,21 +1,9 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import { fetchCoinsAPI } from "../../services/api";
 
-// thunk برای گرفتن دیتا از API
 export const fetchCoins = createAsyncThunk("coins/fetchCoins", async () => {
-  const response = await axios.get(
-    "https://api.coingecko.com/api/v3/coins/markets",
-    {
-      params: {
-        vs_currency: "usd",
-        order: "market_cap_desc",
-        per_page: 20,
-        page: 1,
-        sparkline: false,
-      },
-    }
-  );
-  return response.data;
+  const data = await fetchCoinsAPI();
+  return data;
 });
 
 const coinsSlice = createSlice({
@@ -36,9 +24,9 @@ const coinsSlice = createSlice({
         state.loading = false;
         state.list = action.payload;
       })
-      .addCase(fetchCoins.rejected, (state) => {
+      .addCase(fetchCoins.rejected, (state, action) => {
         state.loading = false;
-        state.error = "خطا در دریافت داده‌ها";
+        state.error = action.error.message;
       });
   },
 });

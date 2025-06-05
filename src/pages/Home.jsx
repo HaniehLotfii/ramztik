@@ -4,6 +4,8 @@ import { fetchCoins } from "../redux/slices/coinsSlice";
 import CryptoCard from "../components/CryptoCard";
 import { GoSortDesc, GoSearch } from "react-icons/go";
 import { CgSortAz, CgSortZa } from "react-icons/cg";
+// import DollarToRialRate from "../services/dollarToRialRate.jsx";
+import { Link } from "react-router-dom";
 
 const Home = () => {
   const dispatch = useDispatch();
@@ -15,7 +17,7 @@ const Home = () => {
     direction: "desc",
   });
   const [showInRial, setShowInRial] = useState(false);
-  const exchangeRate = 80000;
+  const exchangeRate = 800000;
 
   useEffect(() => {
     dispatch(fetchCoins());
@@ -103,7 +105,7 @@ const Home = () => {
 
           <button
             onClick={() => handleSortClick("price")}
-            className="px-4 py-2 rounded-xl bg-blue-500 text-white flex items-center justify-center gap-2"
+            className="px-4 py-2 rounded-xl bg-blue-500 text-gray-500 dark:text-gray-300 flex items-center justify-center gap-2"
           >
             قیمت
             {sortConfig.key === "price" &&
@@ -112,7 +114,7 @@ const Home = () => {
 
           <button
             onClick={() => handleSortClick("change")}
-            className="px-4 py-2 rounded-xl bg-green-500 text-white flex items-center justify-center gap-2"
+            className="px-4 py-2 rounded-xl bg-green-500 text-gray-500 dark:text-gray-300 flex items-center justify-center gap-2"
           >
             تغییرات
             {sortConfig.key === "change" &&
@@ -129,18 +131,20 @@ const Home = () => {
           <p className="text-center col-span-full">در حال بارگذاری...</p>
         ) : (
           filteredCoins.map((coin) => (
-            <CryptoCard
-              key={coin.id}
-              name={coin.name}
-              symbol={coin.symbol}
-              price={
-                showInRial
-                  ? (coin.current_price * exchangeRate).toLocaleString() + " ﷼"
-                  : coin.current_price.toLocaleString()
-              }
-              change={coin.price_change_percentage_24h?.toFixed(2)}
-              iconUrl={coin.image}
-            />
+            <Link to={`/coin/${coin.id}`} key={coin.id}>
+              <CryptoCard
+                name={coin.name}
+                symbol={coin.symbol}
+                price={
+                  showInRial
+                    ? (coin.current_price * exchangeRate).toLocaleString() +
+                      " ﷼"
+                    : "$" + coin.current_price.toLocaleString()
+                }
+                change={coin.price_change_percentage_24h?.toFixed(2)}
+                iconUrl={coin.image}
+              />
+            </Link>
           ))
         )}
       </div>
