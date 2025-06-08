@@ -156,21 +156,21 @@ const CoinDetails = () => {
             {activeTab === "info" && (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 {/* قیمت فعلی */}
-                <div className="p-5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm transition-transform duration-200 hover:scale-[1.02] h-full">
-                  <div className="text-sm text-gray-500 mb-1">
+                <div className="p-2 sm:p-5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm transition-transform duration-200 hover:scale-[1.02] h-full">
+                  <div className="text-xs sm:text-sm text-gray-500 mb-1">
                     قیمت فعلی (USDT)
                   </div>
-                  <div className="text-xl font-bold text-gray-900 dark:text-white">
+                  <div className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
                     ${coin.market_data.current_price.usd.toLocaleString()}
                   </div>
                 </div>
 
                 {/* قیمت به ریال */}
-                <div className="p-5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm transition-transform duration-200 hover:scale-[1.02] h-full">
-                  <div className="text-sm text-gray-500 mb-1">
-                    قیمت فعلی به ریال
+                <div className="p-2 sm:p-5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm transition-transform duration-200 hover:scale-[1.02] h-full">
+                  <div className="text-xs sm:text-sm text-gray-500 mb-1">
+                    قیمت ریالی
                   </div>
-                  <div className="text-xl font-bold text-gray-900 dark:text-white">
+                  <div className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
                     {(
                       coin.market_data.current_price.usd * exchangeRate
                     ).toLocaleString()}{" "}
@@ -179,44 +179,48 @@ const CoinDetails = () => {
                 </div>
 
                 {/* تغییرات ۲۴ ساعت اخیر */}
-                <div className="p-5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm transition-transform duration-200 hover:scale-[1.02] h-full">
-                  <div className="text-sm text-gray-500 mb-1">
-                    تغییرات ۲۴ ساعت اخیر
+                <div className="p-2 sm:p-5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm transition-transform duration-200 hover:scale-[1.02] h-full">
+                  <div className="text-xs sm:text-sm text-gray-500 mb-1">
+                    تغییر ارزش ۲۴ ساعت اخیر
                   </div>
                   <div
-                    className={`text-xl font-bold ${
+                    className={`text-lg sm:text-xl font-bold ${
                       coin.market_data.price_change_percentage_24h >= 0
                         ? "text-green-500"
                         : "text-red-500"
                     }`}
                   >
-                    {coin.market_data.price_change_percentage_24h.toFixed(2)}%
+                    %{coin.market_data.price_change_percentage_24h.toFixed(2)}
                   </div>
                 </div>
 
                 {/* مارکت کپ */}
-                <div className="p-5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm transition-transform duration-200 hover:scale-[1.02] h-full">
-                  <div className="text-sm text-gray-500 mb-1">مارکت کپ</div>
-                  <div className="text-xl font-bold text-gray-900 dark:text-white">
-                    {coin.market_data.market_cap.usd.toLocaleString()}$
+                <div className="p-2 sm:p-5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm transition-transform duration-200 hover:scale-[1.02] h-full">
+                  <div className="text-xs sm:text-sm text-gray-500 mb-1">
+                    ارزش بازار جهانی
+                  </div>
+                  <div className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
+                    ${coin.market_data.market_cap.usd.toLocaleString()}
                   </div>
                 </div>
 
                 {/* مارکت کپ رنک */}
-                <div className="p-5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm transition-transform duration-200 hover:scale-[1.02] h-full">
-                  <div className="text-sm text-gray-500 mb-1">مارکت کپ رنک</div>
-                  <div className="text-xl font-bold text-gray-900 dark:text-white">
+                <div className="p-2 sm:p-5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm transition-transform duration-200 hover:scale-[1.02] h-full">
+                  <div className="text-xs sm:text-sm text-gray-500 mb-1">
+                    رتبه بازار
+                  </div>
+                  <div className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
                     #{coin.market_cap_rank}
                   </div>
                 </div>
 
                 {/* حجم معاملات */}
-                <div className="p-5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm transition-transform duration-200 hover:scale-[1.02] h-full">
-                  <div className="text-sm text-gray-500 mb-1">
+                <div className="p-2 sm:p-5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm transition-transform duration-200 hover:scale-[1.02] h-full">
+                  <div className="text-xs sm:text-sm text-gray-500 mb-1">
                     حجم معاملات ۲۴ ساعت اخیر
                   </div>
-                  <div className="text-xl font-bold text-gray-900 dark:text-white">
-                    {coin.market_data.total_volume.usd.toLocaleString()}$
+                  <div className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
+                    ${coin.market_data.total_volume.usd.toLocaleString()}
                   </div>
                 </div>
               </div>

@@ -86,7 +86,7 @@ const Home = () => {
           className="flex-1 min-w-[200px] px-4 py-2 rounded-xl border border-gray-300 focus:outline-none focus:ring focus:border-blue-400 dark:bg-gray-800 dark:text-white"
         />
 
-        <label className="flex items-center gap-3 cursor-pointer">
+        <label className="hidden sm:flex items-center gap-3 cursor-pointer">
           <input
             type="checkbox"
             className="sr-only peer"
@@ -126,7 +126,7 @@ const Home = () => {
       {error && <p className="text-center text-red-500 mb-4">{error}</p>}
 
       {/* 🧩 گرید کارت‌ها */}
-      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <div className="grid gap-4 grid-cols-3 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {loading && coins.length === 0 ? (
           <p className="p-4 flex items-center justify-center text-blue-500 animate-spin text-2xl">
             ⏳

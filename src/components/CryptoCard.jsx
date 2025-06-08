@@ -4,22 +4,28 @@ const CryptoCard = React.memo(({ name, symbol, price, change, iconUrl }) => {
   const isPositive = change >= 0;
 
   return (
-    <div className="bg-white dark:bg-gray-800 p-4 rounded-2xl shadow hover:shadow-lg transition-all h-full flex flex-col justify-start">
-      {/* Top Row: Logo + Name */}
-      <div className="flex items-center gap-3 mb-2">
-        <img src={iconUrl} alt={name} className="w-8 h-8 shrink-0" />
-        <div className="min-w-0">
-          <p className="font-bold">{name}</p>
-          <p className="text-sm text-gray-500 uppercase ">{symbol}</p>
-        </div>
-      </div>
+    <div className="bg-white dark:bg-gray-800 p-2 sm:p-4 rounded-2xl shadow hover:shadow-lg transition-all h-full flex flex-col justify-start items-center text-center">
+      {/* Logo */}
+      <img
+        src={iconUrl}
+        alt={name}
+        className="w-6 h-6 sm:w-8 sm:h-8 shrink-0 mb-2"
+      />
 
-      {/* Price */}
-      <p className="text-lg font-semibold mt-2">{price}</p>
+      {/* Symbol → always show → smaller text in mobile */}
+      <p className="text-xs sm:text-sm text-gray-500 uppercase mb-1">
+        {symbol}
+      </p>
 
-      {/* 24h Change */}
+      {/* Name → hidden in mobile */}
+      <p className="font-bold text-xs sm:text-base hidden sm:block">{name}</p>
+
+      {/* Price → hidden in mobile */}
+      <p className="text-sm font-semibold mt-1 hidden sm:block">{price}</p>
+
+      {/* 24h Change → always show */}
       <p
-        className={`text-sm mt-1 ${
+        className={`mt-1 text-xs sm:text-sm font-bold ${
           isPositive ? "text-green-500" : "text-red-500"
         }`}
       >
