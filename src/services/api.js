@@ -22,3 +22,17 @@ export const getCoinDetails = async (coinId) => {
   );
   return response.data;
 };
+
+export const getCoinMarketChart = async (coinId, days) => {
+  const response = await axios.get(
+    `https://api.coingecko.com/api/v3/coins/${coinId}/market_chart`,
+    {
+      params: {
+        vs_currency: "usd",
+        days,
+        interval: "daily",
+      },
+    }
+  );
+  return response.data;
+};

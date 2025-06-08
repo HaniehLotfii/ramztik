@@ -5,10 +5,22 @@ body {
 }
 
 #root {
-  margin: 0 auto;
-  padding-right: 3rem;
-  padding-left: 3rem;
+  margin: 0;
   text-align: center;
+  background: linear-gradient(to top, #f9fafb, #e5e7eb); /* light mode */
+}
+
+@media (prefers-color-scheme: dark) {
+  #root {
+    background: linear-gradient(to top, #1f2937, #111827); /* dark mode */
+  }
+}
+
+@media (max-width: 640px) {
+  #root {
+    padding-left: 0;
+    padding-right: 0;
+  }
 }
 
 .logo {

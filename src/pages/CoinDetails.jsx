@@ -1,12 +1,46 @@
-// src/pages/CoinDetails.jsx
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { getCoinDetails } from "../services/api";
+import { useEffect, useState, useMemo } from "react";
+import { getCoinDetails, getCoinMarketChart } from "../services/api";
+import { Line } from "react-chartjs-2";
+import {
+  Chart as ChartJS,
+  LineElement,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  Tooltip,
+  Legend,
+} from "chart.js";
+import descriptionsFa from "../data/coin_descriptions_fa.json";
+import { FaFacebookF, FaRedditAlien, FaGithub, FaGlobe } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
+
+ChartJS.register(
+  LineElement,
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  Tooltip,
+  Legend
+);
 
 const CoinDetails = () => {
-  const { id } = useParams(); // گرفتن آیدی از URL
+  const { id } = useParams();
   const [coin, setCoin] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [chartData, setChartData] = useState(null);
+  const [selectedDays, setSelectedDays] = useState(30);
+  const [showFullDescription, setShowFullDescription] = useState(false);
+  const [activeTab, setActiveTab] = useState("info");
+
+  const exchangeRate = 800000;
+
+  const timeFrames = [
+    { label: "۱ هفته", value: 7 },
+    { label: "۱ ماه", value: 30 },
+    { label: "۶ ماه", value: 180 },
+    { label: "۱ سال", value: 365 },
+  ];
 
   useEffect(() => {
     const fetchCoin = async () => {
@@ -23,23 +57,373 @@ const CoinDetails = () => {
     fetchCoin();
   }, [id]);
 
-  if (loading) return <p className="p-4">در حال بارگذاری...</p>;
+  useEffect(() => {
+    const fetchChartData = async () => {
+      try {
+        const data = await getCoinMarketChart(id, selectedDays);
+        setChartData(data.prices);
+      } catch (error) {
+        console.error("خطا در گرفتن دیتای نمودار:", error);
+      }
+    };
+
+    fetchChartData();
+  }, [id, selectedDays]);
+
+  // جلوگیری از رندر بی‌نهایت
+  const chartConfig = useMemo(() => {
+    if (!chartData) return null;
+
+    return {
+      labels: chartData.map((item) => {
+        const date = new Date(item[0]);
+        return `${date.getMonth() + 1}/${date.getDate()}`;
+      }),
+      datasets: [
+        {
+          label: "(USDT)",
+          data: chartData.map((item) => item[1]),
+          borderColor: "rgb(75, 192, 192)",
+          backgroundColor: "rgba(75, 192, 192, 0.2)",
+          tension: 0.4,
+          pointRadius: 0,
+        },
+      ],
+    };
+  }, [chartData]);
+
+  // رنگ خطوط نمودار
+  const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+  if (loading)
+    return (
+      <p className="p-4 flex items-center justify-center text-blue-500 animate-spin text-2xl">
+        ⏳
+      </p>
+    );
   if (!coin) return <p className="p-4 text-red-500">ارز پیدا نشد</p>;
 
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold mb-2">
-        {coin.name} ({coin.symbol.toUpperCase()})
-      </h1>
-      <img src={coin.image.large} alt={coin.name} className="w-20 mb-4" />
-      <p>قیمت فعلی: ${coin.market_data.current_price.usd.toLocaleString()}</p>
-      <p>
-        تغییرات 24ساعته:{" "}
-        {coin.market_data.price_change_percentage_24h.toFixed(2)}%
-      </p>
-      <p className="mt-4 text-sm text-gray-600">
-        {coin.description.en?.split(". ")[0]}
-      </p>
+    <div className="">
+      <div className="flex flex-col sm:flex-row items-center justify-center mb-6 gap-4 text-center sm:text-left">
+        <img src={coin.image.large} alt={coin.name} className="w-16 sm:w-20" />
+        <div>
+          <h1 className="text-2xl font-bold">{coin.name}</h1>
+          <p className="text-lg text-gray-500">({coin.symbol.toUpperCase()})</p>
+        </div>
+      </div>
+
+      <div>
+        <div className="flex border-b-2 mb-4 justify-center">
+          <button
+            onClick={() => setActiveTab("info")}
+            className={`px-4 py-2 text-xs font-medium m-1 mb-0 ${
+              activeTab === "info"
+                ? "border-b-2 border-cyan-500 text-cyan-700 dark:text-cyan-200"
+                : "text-gray-500 dark:text-gray-300"
+            }`}
+          >
+            اطلاعات بازار
+          </button>
+          <button
+            onClick={() => setActiveTab("chart")}
+            className={`px-4 py-2 text-sm font-medium m-1 mb-0 ${
+              activeTab === "chart"
+                ? "border-b-2 border-cyan-500 text-cyan-700 dark:text-cyan-200"
+                : "text-gray-500 dark:text-gray-300"
+            }`}
+          >
+            چارت
+          </button>
+          <button
+            onClick={() => setActiveTab("about")}
+            className={`px-4 py-2 text-sm font-medium m-1 mb-0 ${
+              activeTab === "about"
+                ? "border-b-2 border-cyan-500 text-cyan-700 dark:text-cyan-200"
+                : "text-gray-500 dark:text-gray-300"
+            }`}
+          >
+            توضیحات
+          </button>
+        </div>
+
+        <div>
+          <div
+            className={`transition-opacity duration-500 ${
+              activeTab === "info" ? "opacity-100" : "opacity-0"
+            }`}
+          >
+            {activeTab === "info" && (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {/* قیمت فعلی */}
+                <div className="p-5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm transition-transform duration-200 hover:scale-[1.02] h-full">
+                  <div className="text-sm text-gray-500 mb-1">
+                    قیمت فعلی (USDT)
+                  </div>
+                  <div className="text-xl font-bold text-gray-900 dark:text-white">
+                    ${coin.market_data.current_price.usd.toLocaleString()}
+                  </div>
+                </div>
+
+                {/* قیمت به ریال */}
+                <div className="p-5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm transition-transform duration-200 hover:scale-[1.02] h-full">
+                  <div className="text-sm text-gray-500 mb-1">
+                    قیمت فعلی به ریال
+                  </div>
+                  <div className="text-xl font-bold text-gray-900 dark:text-white">
+                    {(
+                      coin.market_data.current_price.usd * exchangeRate
+                    ).toLocaleString()}{" "}
+                    ﷼
+                  </div>
+                </div>
+
+                {/* تغییرات ۲۴ ساعت اخیر */}
+                <div className="p-5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm transition-transform duration-200 hover:scale-[1.02] h-full">
+                  <div className="text-sm text-gray-500 mb-1">
+                    تغییرات ۲۴ ساعت اخیر
+                  </div>
+                  <div
+                    className={`text-xl font-bold ${
+                      coin.market_data.price_change_percentage_24h >= 0
+                        ? "text-green-500"
+                        : "text-red-500"
+                    }`}
+                  >
+                    {coin.market_data.price_change_percentage_24h.toFixed(2)}%
+                  </div>
+                </div>
+
+                {/* مارکت کپ */}
+                <div className="p-5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm transition-transform duration-200 hover:scale-[1.02] h-full">
+                  <div className="text-sm text-gray-500 mb-1">مارکت کپ</div>
+                  <div className="text-xl font-bold text-gray-900 dark:text-white">
+                    {coin.market_data.market_cap.usd.toLocaleString()}$
+                  </div>
+                </div>
+
+                {/* مارکت کپ رنک */}
+                <div className="p-5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm transition-transform duration-200 hover:scale-[1.02] h-full">
+                  <div className="text-sm text-gray-500 mb-1">مارکت کپ رنک</div>
+                  <div className="text-xl font-bold text-gray-900 dark:text-white">
+                    #{coin.market_cap_rank}
+                  </div>
+                </div>
+
+                {/* حجم معاملات */}
+                <div className="p-5 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm transition-transform duration-200 hover:scale-[1.02] h-full">
+                  <div className="text-sm text-gray-500 mb-1">
+                    حجم معاملات ۲۴ ساعت اخیر
+                  </div>
+                  <div className="text-xl font-bold text-gray-900 dark:text-white">
+                    {coin.market_data.total_volume.usd.toLocaleString()}$
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+          <div
+            className={`transition-opacity duration-500 ${
+              activeTab === "chart" ? "opacity-100" : "opacity-0"
+            }`}
+          >
+            {activeTab === "chart" && (
+              <div>
+                {/* نمودار قیمت */}
+                <div className="mt-8">
+                  <h2 className="text-xl font-bold mb-2">
+                    نمودار قیمت {coin.name}
+                  </h2>
+
+                  {/* انتخاب تایم فریم */}
+                  <div className="flex gap-2 mb-4 ">
+                    {timeFrames.map((frame) => (
+                      <button
+                        key={frame.value}
+                        onClick={() => setSelectedDays(frame.value)}
+                        className={`px-4 py-2 rounded ${
+                          selectedDays === frame.value
+                            ? "bg-blue-500 text-cyan-600 dark:text-cyan-300"
+                            : "bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-white"
+                        }`}
+                      >
+                        {frame.label}
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* نمودار */}
+                  {chartConfig ? (
+                    <div className="h-[400px]">
+                      <Line
+                        data={chartConfig}
+                        options={{
+                          responsive: true,
+                          maintainAspectRatio: false,
+                          scales: {
+                            x: {
+                              grid: {
+                                color: isDarkMode
+                                  ? "rgba(255,255,255,0.1)"
+                                  : "rgba(0,0,0,0.1)",
+                              },
+                              ticks: {
+                                color: isDarkMode ? "#ffffff" : "#000000",
+                              },
+                            },
+                            y: {
+                              grid: {
+                                color: isDarkMode
+                                  ? "rgba(255,255,255,0.1)"
+                                  : "rgba(0,0,0,0.1)",
+                              },
+                              ticks: {
+                                color: isDarkMode ? "#ffffff" : "#000000",
+                              },
+                            },
+                          },
+                        }}
+                      />
+                    </div>
+                  ) : (
+                    <p className="p-4 flex items-center justify-center text-blue-500 animate-spin text-2xl">
+                      ⏳
+                    </p>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+          <div
+            className={`transition-opacity duration-500 ${
+              activeTab === "about" ? "opacity-100" : "opacity-0"
+            }`}
+          >
+            {activeTab === "about" && (
+              <div>
+                {/* اطلاعات بیشتر */}
+                <div className="mt-8 ">
+                  <h2 className="text-xl font-bold mb-2 text-right">
+                    {coin.name} چیست؟
+                  </h2>
+
+                  {/* توضیحات */}
+
+                  <div className="relative bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-4 text-sm text-gray-700 dark:text-gray-300 leading-relaxed mb-6">
+                    <div
+                      className={`transition-all duration-300 ${
+                        showFullDescription
+                          ? "max-h-full"
+                          : "max-h-[80px] overflow-hidden"
+                      }`}
+                    >
+                      {descriptionsFa[coin.id]
+                        ? descriptionsFa[coin.id]
+                        : coin.description.en
+                        ? coin.description.en
+                        : "توضیحی موجود نیست."}
+                    </div>
+
+                    {/* Fade gradient */}
+                    {((descriptionsFa[coin.id] &&
+                      descriptionsFa[coin.id].length > 400) ||
+                      (coin.description.en &&
+                        coin.description.en.length > 400)) &&
+                      !showFullDescription && (
+                        <div className="absolute bottom-10 left-0 w-full h-16 bg-gradient-to-t from-gray-50 dark:from-gray-800 to-transparent pointer-events-none"></div>
+                      )}
+
+                    {/* More / Less button */}
+                    {((descriptionsFa[coin.id] &&
+                      descriptionsFa[coin.id].length > 400) ||
+                      (coin.description.en &&
+                        coin.description.en.length > 400)) && (
+                      <div className="mt-4 text-center">
+                        <span
+                          onClick={() =>
+                            setShowFullDescription((prev) => !prev)
+                          }
+                          className="text-cyan-600 dark:text-cyan-400 hover:underline cursor-pointer font-medium transition-colors duration-200"
+                          role="button"
+                        >
+                          {showFullDescription ? "نمایش کمتر" : "نمایش بیشتر"}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="flex flex-wrap gap-4 justify-center mt-6">
+                    {/* وبسایت رسمی */}
+                    {coin.links.homepage[0] && (
+                      <a
+                        href={coin.links.homepage[0]}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex flex-col items-center w-16 text-center text-blue-500 hover:text-blue-400 transition-colors"
+                      >
+                        <FaGlobe className="text-2xl mb-1" />
+                        <span className="text-xs font-medium">وبسایت</span>
+                      </a>
+                    )}
+
+                    {/* Twitter */}
+                    {coin.links.twitter_screen_name && (
+                      <a
+                        href={`https://twitter.com/${coin.links.twitter_screen_name}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex flex-col items-center w-16 text-center text-blue-500 hover:text-blue-400 transition-colors"
+                      >
+                        <FaXTwitter className="text-2xl mb-1" />
+                        <span className="text-xs font-medium">X</span>
+                      </a>
+                    )}
+
+                    {/* Facebook */}
+                    {coin.links.facebook_username && (
+                      <a
+                        href={`https://facebook.com/${coin.links.facebook_username}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex flex-col items-center w-16 text-center text-blue-500 hover:text-blue-400 transition-colors"
+                      >
+                        <FaFacebookF className="text-2xl mb-1" />
+                        <span className="text-xs font-medium">Facebook</span>
+                      </a>
+                    )}
+
+                    {/* Reddit */}
+                    {coin.links.subreddit_url && (
+                      <a
+                        href={coin.links.subreddit_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex flex-col items-center w-16 text-center text-blue-500 hover:text-blue-400 transition-colors"
+                      >
+                        <FaRedditAlien className="text-2xl mb-1" />
+                        <span className="text-xs font-medium">Reddit</span>
+                      </a>
+                    )}
+
+                    {/* Github */}
+                    {coin.links.repos_url.github[0] && (
+                      <a
+                        href={coin.links.repos_url.github[0]}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex flex-col items-center w-16 text-center text-blue-500 hover:text-blue-400 transition-colors"
+                      >
+                        <FaGithub className="text-2xl mb-1" />
+                        <span className="text-xs font-medium">Github</span>
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

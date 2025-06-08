@@ -128,7 +128,9 @@ const Home = () => {
       {/* 🧩 گرید کارت‌ها */}
       <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {loading && coins.length === 0 ? (
-          <p className="text-center col-span-full">در حال بارگذاری...</p>
+          <p className="p-4 flex items-center justify-center text-blue-500 animate-spin text-2xl">
+            ⏳
+          </p>
         ) : (
           filteredCoins.map((coin) => (
             <Link to={`/coin/${coin.id}`} key={coin.id}>
