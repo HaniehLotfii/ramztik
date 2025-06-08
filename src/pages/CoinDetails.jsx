@@ -105,7 +105,7 @@ const CoinDetails = () => {
 
   return (
     <div className="">
-      <div className="flex flex-col sm:flex-row items-center justify-center mb-6 gap-4 text-center sm:text-left">
+      <div className="flex flex-col sm:flex-row items-center justify-center mb-6 gap-4 text-center sm:text-left opacity-0 animate-fade-in">
         <img src={coin.image.large} alt={coin.name} className="w-16 sm:w-20" />
         <div>
           <h1 className="text-2xl font-bold">{coin.name}</h1>
