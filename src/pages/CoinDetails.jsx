@@ -13,7 +13,8 @@ import {
 } from "chart.js";
 import descriptionsFa from "../data/coin_descriptions_fa.json";
 import { FaFacebookF, FaRedditAlien, FaGithub, FaGlobe } from "react-icons/fa";
-import { FaXTwitter } from "react-icons/fa6";
+import { FaXTwitter, FaRegBookmark, FaBookmark } from "react-icons/fa6";
+import useBookmarks from "../hooks/useBookmarks";
 
 ChartJS.register(
   LineElement,
@@ -32,6 +33,7 @@ const CoinDetails = () => {
   const [selectedDays, setSelectedDays] = useState(30);
   const [showFullDescription, setShowFullDescription] = useState(false);
   const [activeTab, setActiveTab] = useState("info");
+  const { isBookmarked, toggleBookmark } = useBookmarks();
 
   const exchangeRate = 800000;
 
@@ -105,13 +107,28 @@ const CoinDetails = () => {
 
   return (
     <div className="">
-      <div className="flex flex-col sm:flex-row items-center justify-center mb-6 gap-4 text-center sm:text-left opacity-0 animate-fade-in">
+      <div className="flex flex-col sm:flex-row items-center justify-center mb-1 gap-4 text-center sm:text-left opacity-0 animate-fade-in">
         <img src={coin.image.large} alt={coin.name} className="w-16 sm:w-20" />
         <div>
           <h1 className="text-2xl font-bold">{coin.name}</h1>
           <p className="text-lg text-gray-500">({coin.symbol.toUpperCase()})</p>
         </div>
       </div>
+
+      <button
+        onClick={() => toggleBookmark(coin.id)}
+        className="ml-4 mb-2 px-3 py-2 border rounded text-sm font-medium text-cyan-600 border-cyan-600 hover:bg-cyan-50 dark:text-cyan-300 dark:border-cyan-300 dark:hover:bg-gray-800 transition-colors flex items-center gap-2"
+      >
+        {isBookmarked(coin.id) ? (
+          <>
+            <FaBookmark className="text-lg" />
+          </>
+        ) : (
+          <>
+            <FaRegBookmark className="text-lg" />
+          </>
+        )}
+      </button>
 
       <div>
         <div className="flex border-b-2 mb-4 justify-center">

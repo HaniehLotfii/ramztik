@@ -1,8 +1,12 @@
 import logoLight from "../assets/LogoLight.png";
 import logoDark from "../assets/LogoDark.png";
 import { Link } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import { FaBookmark } from "react-icons/fa6";
 
 const Navbar = () => {
+  const location = useLocation();
+
   return (
     <nav
       className="w-full px-4 sm:px-8 lg:px-12 py-1 bg-white dark:dark:bg-[#1C1C34]
@@ -27,14 +31,15 @@ const Navbar = () => {
         </Link>
 
         {/* Bookmark Button */}
-        <button
-          className="flex items-center gap-2 mx-3 px-3 py-2 text-sm font-medium text-cyan-600 dark:text-cyan-300 border border-cyan-600 dark:border-cyan-300 rounded hover:bg-cyan-50 dark:hover:bg-gray-800 transition-colors"
-          onClick={() => {
-            alert("صفحه بوکمارک در حال توسعه است");
-          }}
-        >
-          🔖 بوکمارک‌ها
-        </button>
+        {location.pathname !== "/bookmarks" && (
+          <Link to="/bookmarks">
+            <button className="flex items-center gap-2 py-2 text-sm font-medium text-cyan-600 border border-cyan-600 rounded hover:bg-cyan-50 dark:text-cyan-300 dark:border-cyan-300 dark:hover:bg-gray-800 transition-colors">
+              <FaBookmark className="text-lg" />
+              <span className="text-xs">ارزهای من</span>{" "}
+              {/* فقط متن کوچیک میشه */}
+            </button>
+          </Link>
+        )}
       </div>
     </nav>
   );

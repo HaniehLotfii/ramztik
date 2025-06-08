@@ -7,6 +7,7 @@ import { Routes, Route } from "react-router-dom";
 import Layout from "./layouts/Layout";
 import Home from "./pages/Home";
 import CoinDetails from "./pages/CoinDetails";
+import Bookmarks from "./pages/Bookmarks";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -15,7 +16,8 @@ function App() {
     <Layout>
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/coin/:id" element={<CoinDetails />} />{" "}
+        <Route path="/coin/:id" element={<CoinDetails />} />
+        <Route path="/bookmarks" element={<Bookmarks />} />
       </Routes>
     </Layout>
   );
