@@ -15,6 +15,7 @@ import descriptionsFa from "../data/coin_descriptions_fa.json";
 import { FaFacebookF, FaRedditAlien, FaGithub, FaGlobe } from "react-icons/fa";
 import { FaXTwitter, FaRegBookmark, FaBookmark } from "react-icons/fa6";
 import useBookmarks from "../hooks/useBookmarks";
+import PersianNumber from "../components/PersianNumber.jsx";
 
 ChartJS.register(
   LineElement,
@@ -178,7 +179,10 @@ const CoinDetails = () => {
                     قیمت فعلی (USDT)
                   </div>
                   <div className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
-                    ${coin.market_data.current_price.usd.toLocaleString()}
+                    $
+                    <PersianNumber>
+                      {coin.market_data.current_price.usd.toLocaleString()}
+                    </PersianNumber>
                   </div>
                 </div>
 
@@ -188,9 +192,11 @@ const CoinDetails = () => {
                     قیمت ریالی
                   </div>
                   <div className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
-                    {(
-                      coin.market_data.current_price.usd * exchangeRate
-                    ).toLocaleString()}{" "}
+                    <PersianNumber>
+                      {(
+                        coin.market_data.current_price.usd * exchangeRate
+                      ).toLocaleString()}
+                    </PersianNumber>
                     ﷼
                   </div>
                 </div>
@@ -207,7 +213,16 @@ const CoinDetails = () => {
                         : "text-red-500"
                     }`}
                   >
-                    %{coin.market_data.price_change_percentage_24h.toFixed(2)}
+                    <div className="flex justify-center">
+                      <div>
+                        <PersianNumber>
+                          {Math.abs(
+                            coin.market_data.price_change_percentage_24h
+                          ).toFixed(2)}
+                        </PersianNumber>
+                      </div>
+                      <div>%</div>
+                    </div>
                   </div>
                 </div>
 
@@ -217,7 +232,10 @@ const CoinDetails = () => {
                     ارزش بازار جهانی
                   </div>
                   <div className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
-                    ${coin.market_data.market_cap.usd.toLocaleString()}
+                    $
+                    <PersianNumber>
+                      {coin.market_data.market_cap.usd.toLocaleString()}
+                    </PersianNumber>
                   </div>
                 </div>
 
@@ -227,7 +245,7 @@ const CoinDetails = () => {
                     رتبه بازار
                   </div>
                   <div className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
-                    #{coin.market_cap_rank}
+                    #<PersianNumber>{coin.market_cap_rank}</PersianNumber>
                   </div>
                 </div>
 
@@ -237,7 +255,10 @@ const CoinDetails = () => {
                     حجم معاملات ۲۴ ساعت اخیر
                   </div>
                   <div className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
-                    ${coin.market_data.total_volume.usd.toLocaleString()}
+                    $
+                    <PersianNumber>
+                      {coin.market_data.total_volume.usd.toLocaleString()}
+                    </PersianNumber>
                   </div>
                 </div>
               </div>
