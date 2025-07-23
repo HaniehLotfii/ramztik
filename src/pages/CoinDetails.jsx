@@ -276,7 +276,6 @@ const CoinDetails = () => {
                   <h2 className="text-xl font-bold mb-2">
                     نمودار قیمت {coin.name}
                   </h2>
-
                   {/* انتخاب تایم فریم */}
                   <div className="flex gap-2 mb-4 ">
                     {timeFrames.map((frame) => (
@@ -292,8 +291,7 @@ const CoinDetails = () => {
                         {frame.label}
                       </button>
                     ))}
-                  </div>
-
+                  </div>{" "}
                   {/* نمودار */}
                   {chartConfig ? (
                     <div className="h-[400px]">

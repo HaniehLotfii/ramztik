@@ -28,7 +28,7 @@ const CryptoCard = React.memo(({ name, symbol, price, change, iconUrl }) => {
       </p>
 
       {/* 24h Change → always show */}
-      <p
+      <div
         className={`mt-1 text-xs sm:text-sm font-bold flex ${
           isPositive ? "text-green-500" : "text-red-500"
         }`}
@@ -37,7 +37,7 @@ const CryptoCard = React.memo(({ name, symbol, price, change, iconUrl }) => {
           <PersianNumber>{Math.abs(change)}</PersianNumber>
         </div>
         %
-      </p>
+      </div>
     </div>
   );
 });
