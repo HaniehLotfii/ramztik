@@ -16,7 +16,7 @@
 //   );
 //   return response.data;
 // };
-import axios from "axios";
+import axios from "./axiosInstance";
 
 const CACHE_KEY = "coins_data_cache";
 const CACHE_EXPIRY = 49 * 1000; // 49 seconds
@@ -34,19 +34,16 @@ export const fetchCoinsAPI = async () => {
   }
 
   try {
-    const response = await axios.get(
-      "https://api.coingecko.com/api/v3/coins/markets",
-      {
-        params: {
-          vs_currency: "usd",
-          order: "market_cap_desc",
-          per_page: 96,
-          page: 1,
-          sparkline: false,
-          price_change_percentage: "24h",
-        },
-      }
-    );
+    const response = await axios.get("/coins/markets", {
+      params: {
+        vs_currency: "usd",
+        order: "market_cap_desc",
+        per_page: 96,
+        page: 1,
+        sparkline: false,
+        price_change_percentage: "24h",
+      },
+    });
 
     const result = response.data;
 
@@ -85,15 +82,13 @@ export const getCoinDetails = async (coinId) => {
   if (cached) {
     const parsed = JSON.parse(cached);
     if (Date.now() - parsed.timestamp < CACHE_EXPIRY) {
-      console.log(`⏳ Using cached details for ${coinId}`);
+      console.log(`Using cached details for ${coinId}`);
       return parsed.data;
     }
   }
 
   try {
-    const response = await axios.get(
-      `https://api.coingecko.com/api/v3/coins/${coinId}`
-    );
+    const response = await axios.get(`/coins/${coinId}`);
     const result = response.data;
 
     localStorage.setItem(
@@ -132,22 +127,19 @@ export const getCoinMarketChart = async (coinId, days) => {
   if (cached) {
     const parsed = JSON.parse(cached);
     if (Date.now() - parsed.timestamp < CACHE_EXPIRY) {
-      console.log(`⏳ Using cached chart for ${coinId} (${days}d)`);
+      console.log(`Using cached chart for ${coinId} (${days}d)`);
       return parsed.data;
     }
   }
 
   try {
-    const response = await axios.get(
-      `https://api.coingecko.com/api/v3/coins/${coinId}/market_chart`,
-      {
-        params: {
-          vs_currency: "usd",
-          days,
-          interval: "daily",
-        },
-      }
-    );
+    const response = await axios.get(`/coins/${coinId}/market_chart`, {
+      params: {
+        vs_currency: "usd",
+        days,
+        interval: "daily",
+      },
+    });
     const result = response.data;
 
     localStorage.setItem(
@@ -158,7 +150,7 @@ export const getCoinMarketChart = async (coinId, days) => {
     return result;
   } catch (error) {
     if (error.response?.status === 429 && cached) {
-      console.warn(`⚠️ 429: Using cached chart data for ${coinId} (${days}d)`);
+      console.warn(`Using cached chart data for ${coinId} (${days}d)`);
       return JSON.parse(cached).data;
     }
     throw error;
