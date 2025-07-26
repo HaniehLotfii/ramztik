@@ -2,7 +2,6 @@ import { useEffect, useState, useMemo } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchCoins } from "../redux/slices/coinsSlice";
 import CryptoCard from "../components/CryptoCard";
-import Footer from "../components/Footer";
 import { GoSortDesc, GoSearch } from "react-icons/go";
 import { CgSortAz, CgSortZa } from "react-icons/cg";
 // import DollarToRialRate from "../services/dollarToRialRate.jsx";
@@ -151,7 +150,6 @@ const Home = () => {
           ))
         )}
       </div>
-      <Footer />
     </div>
   );
 };
