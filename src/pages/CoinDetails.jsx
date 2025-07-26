@@ -86,7 +86,7 @@ const CoinDetails = () => {
         {
           label: "(USDT)",
           data: chartData.map((item) => item[1]),
-          borderColor: "rgb(75, 192, 192)",
+          borderColor: "#10B981",
           backgroundColor: "rgba(75, 192, 192, 0.2)",
           tension: 0.4,
           pointRadius: 0,
@@ -94,9 +94,6 @@ const CoinDetails = () => {
       ],
     };
   }, [chartData]);
-
-  // رنگ خطوط نمودار
-  const isDarkMode = window.matchMedia("(prefers-color-scheme: dark)").matches;
 
   if (loading)
     return (
@@ -118,7 +115,7 @@ const CoinDetails = () => {
 
       <button
         onClick={() => toggleBookmark(coin.id)}
-        className="ml-4 mb-2 px-3 py-2 border rounded text-sm font-medium text-cyan-600 border-cyan-600 hover:bg-cyan-50 dark:text-cyan-300 dark:border-cyan-300 dark:hover:bg-gray-800 transition-colors flex items-center gap-2"
+        className="ml-4 mb-2 px-3 py-2 bg-gray-200 border rounded-lg text-cyan-700  hover:bg-cyan-50 dark:text-cyan-700 transition-colors flex items-center gap-2"
       >
         {isBookmarked(coin.id) ? (
           <>
@@ -135,30 +132,30 @@ const CoinDetails = () => {
         <div className="flex border-b-2 mb-4 justify-center">
           <button
             onClick={() => setActiveTab("info")}
-            className={`px-4 py-2 text-xs font-medium m-1 mb-0 ${
+            className={`rounded-t-lg px-4 py-2 text-xs font-medium m-1 mb-0 ${
               activeTab === "info"
-                ? "border-b-2 border-cyan-500 text-cyan-700 dark:text-cyan-200"
-                : "text-gray-500 dark:text-gray-300"
+                ? "border-b-2 text-cyan-700 dark:text-cyan-600"
+                : "text-gray-500"
             }`}
           >
             اطلاعات بازار
           </button>
           <button
             onClick={() => setActiveTab("chart")}
-            className={`px-4 py-2 text-sm font-medium m-1 mb-0 ${
+            className={`rounded-t-lg px-4 py-2 text-sm font-medium m-1 mb-0 ${
               activeTab === "chart"
-                ? "border-b-2 border-cyan-500 text-cyan-700 dark:text-cyan-200"
-                : "text-gray-500 dark:text-gray-300"
+                ? "border-b-2  text-cyan-700 dark:text-cyan-600"
+                : "text-gray-500"
             }`}
           >
             چارت
           </button>
           <button
             onClick={() => setActiveTab("about")}
-            className={`px-4 py-2 text-sm font-medium m-1 mb-0 ${
+            className={`rounded-t-lg px-4 py-2 text-sm font-medium m-1 mb-0 ${
               activeTab === "about"
-                ? "border-b-2 border-cyan-500 text-cyan-700 dark:text-cyan-200"
-                : "text-gray-500 dark:text-gray-300"
+                ? "border-b-2 text-cyan-700 dark:text-cyan-600"
+                : "text-gray-500"
             }`}
           >
             توضیحات
@@ -282,10 +279,10 @@ const CoinDetails = () => {
                       <button
                         key={frame.value}
                         onClick={() => setSelectedDays(frame.value)}
-                        className={`px-4 py-2 rounded ${
+                        className={`px-4 py-2 rounded-lg bg-gray-200 ${
                           selectedDays === frame.value
-                            ? "bg-blue-500 text-cyan-600 dark:text-cyan-300"
-                            : "bg-gray-200 text-gray-700 dark:bg-gray-700 dark:text-white"
+                            ? " text-cyan-600 border-cyan-600 dark:text-cyan-600"
+                            : "text-gray-500 dark:bg-gray-700 dark:text-gray-500"
                         }`}
                       >
                         {frame.label}
@@ -303,22 +300,18 @@ const CoinDetails = () => {
                           scales: {
                             x: {
                               grid: {
-                                color: isDarkMode
-                                  ? "rgba(255,255,255,0.1)"
-                                  : "rgba(0,0,0,0.1)",
+                                color: "#38BDF8",
                               },
                               ticks: {
-                                color: isDarkMode ? "#ffffff" : "#000000",
+                                color: "#38BDF8",
                               },
                             },
                             y: {
                               grid: {
-                                color: isDarkMode
-                                  ? "rgba(255,255,255,0.1)"
-                                  : "rgba(0,0,0,0.1)",
+                                color: "#38BDF8",
                               },
                               ticks: {
-                                color: isDarkMode ? "#ffffff" : "#000000",
+                                color: "#38BDF8",
                               },
                             },
                           },

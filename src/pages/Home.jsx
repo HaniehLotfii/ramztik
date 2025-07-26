@@ -93,7 +93,7 @@ const Home = () => {
             checked={showInRial}
             onChange={() => setShowInRial((prev) => !prev)}
           />
-          <div className="w-20 h-8 bg-gray-400 rounded-full relative peer-checked:bg-blue-600 transition-colors">
+          <div className="w-15 h-8 bg-gray-400 rounded-full relative peer-checked:bg-cyan-600 transition-colors">
             <div className="absolute top-1 left-1 w-7 h-6 bg-white rounded-full text-[12px] flex items-center justify-center text-gray-800 transition-all duration-300 peer-checked:translate-x-10">
               {showInRial ? "﷼" : "$"}
             </div>
@@ -101,11 +101,11 @@ const Home = () => {
         </label>
 
         <div className="flex gap-2 w-full sm:w-auto">
-          <GoSortDesc className="text-gray-500 dark:text-gray-300 text-xl mt-3" />
+          <GoSortDesc className="text-cyan-700 dark:text-cyan-300 text-xl mt-3" />
 
           <button
             onClick={() => handleSortClick("price")}
-            className="px-4 py-2 rounded-xl bg-blue-500 text-gray-500 dark:text-gray-300 flex items-center justify-center gap-2"
+            className="px-4 py-2 rounded-xl  text-cyan-700 flex items-center justify-center gap-2"
           >
             قیمت
             {sortConfig.key === "price" &&
@@ -114,7 +114,7 @@ const Home = () => {
 
           <button
             onClick={() => handleSortClick("change")}
-            className="px-4 py-2 rounded-xl bg-green-500 text-gray-500 dark:text-gray-300 flex items-center justify-center gap-2"
+            className="px-4 py-2 rounded-xl text-cyan-700 flex items-center justify-center gap-2"
           >
             تغییرات
             {sortConfig.key === "change" &&
