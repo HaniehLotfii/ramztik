@@ -1,4 +1,4 @@
-// import axios from "axios";
+import axios from "axios";
 
 // export const fetchCoinsAPI = async () => {
 //   const response = await axios.get(
@@ -16,7 +16,7 @@
 //   );
 //   return response.data;
 // };
-import axios from "./axiosInstance";
+// import axios from "./axiosInstance";
 
 const CACHE_KEY = "coins_data_cache";
 const CACHE_EXPIRY = 49 * 1000; // 49 seconds
@@ -34,16 +34,19 @@ export const fetchCoinsAPI = async () => {
   }
 
   try {
-    const response = await axios.get("/coins/markets", {
-      params: {
-        vs_currency: "usd",
-        order: "market_cap_desc",
-        per_page: 96,
-        page: 1,
-        sparkline: false,
-        price_change_percentage: "24h",
-      },
-    });
+    const response = await axios.get(
+      "https://api.coingecko.com/api/v3/coins/markets",
+      {
+        params: {
+          vs_currency: "usd",
+          order: "market_cap_desc",
+          per_page: 96,
+          page: 1,
+          sparkline: false,
+          price_change_percentage: "24h",
+        },
+      }
+    );
 
     const result = response.data;
 
@@ -88,7 +91,9 @@ export const getCoinDetails = async (coinId) => {
   }
 
   try {
-    const response = await axios.get(`/coins/${coinId}`);
+    const response = await axios.get(
+      `https://api.coingecko.com/api/v3/coins/${coinId}`
+    );
     const result = response.data;
 
     localStorage.setItem(
@@ -133,13 +138,16 @@ export const getCoinMarketChart = async (coinId, days) => {
   }
 
   try {
-    const response = await axios.get(`/coins/${coinId}/market_chart`, {
-      params: {
-        vs_currency: "usd",
-        days,
-        interval: "daily",
-      },
-    });
+    const response = await axios.get(
+      `https://api.coingecko.com/api/v3/coins/${coinId}/market_chart`,
+      {
+        params: {
+          vs_currency: "usd",
+          days,
+          interval: "daily",
+        },
+      }
+    );
     const result = response.data;
 
     localStorage.setItem(
