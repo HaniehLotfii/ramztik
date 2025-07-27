@@ -14,7 +14,7 @@ const Bookmarks = () => {
 
   return (
     <div>
-      <h2 className="flex items-center text-2xl font-bold mb-4 gap-2">
+      <h2 className="flex items-center text-2xl font-bold mb-4 gap-2 text-cyan-800">
         <FaBookmark />
         ارزهای من
       </h2>

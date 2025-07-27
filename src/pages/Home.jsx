@@ -105,7 +105,7 @@ const Home = () => {
 
           <button
             onClick={() => handleSortClick("price")}
-            className="px-4 py-2 rounded-xl  text-cyan-700 flex items-center justify-center gap-2"
+            className="px-4 py-2 rounded-xl  text-cyan-700 flex items-center justify-center gap-2 bg-gray-200"
           >
             قیمت
             {sortConfig.key === "price" &&
@@ -114,7 +114,7 @@ const Home = () => {
 
           <button
             onClick={() => handleSortClick("change")}
-            className="px-4 py-2 rounded-xl text-cyan-700 flex items-center justify-center gap-2"
+            className="px-4 py-2 rounded-xl text-cyan-700 flex items-center justify-center gap-2 bg-gray-200"
           >
             تغییرات
             {sortConfig.key === "change" &&

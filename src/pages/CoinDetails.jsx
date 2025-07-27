@@ -132,7 +132,7 @@ const CoinDetails = () => {
         <div className="flex border-b-2 mb-4 justify-center">
           <button
             onClick={() => setActiveTab("info")}
-            className={`rounded-t-lg px-4 py-2 text-xs font-medium m-1 mb-0 ${
+            className={`rounded-t-lg px-4 py-2 text-xs font-medium m-1 mb-0 bg-gray-200 ${
               activeTab === "info"
                 ? "border-b-2 text-cyan-700 dark:text-cyan-600"
                 : "text-gray-500"
@@ -142,7 +142,7 @@ const CoinDetails = () => {
           </button>
           <button
             onClick={() => setActiveTab("chart")}
-            className={`rounded-t-lg px-4 py-2 text-sm font-medium m-1 mb-0 ${
+            className={`rounded-t-lg px-4 py-2 text-sm font-medium m-1 mb-0 bg-gray-200 ${
               activeTab === "chart"
                 ? "border-b-2  text-cyan-700 dark:text-cyan-600"
                 : "text-gray-500"
@@ -152,7 +152,7 @@ const CoinDetails = () => {
           </button>
           <button
             onClick={() => setActiveTab("about")}
-            className={`rounded-t-lg px-4 py-2 text-sm font-medium m-1 mb-0 ${
+            className={`rounded-t-lg px-4 py-2 text-sm font-medium m-1 mb-0 bg-gray-200 ${
               activeTab === "about"
                 ? "border-b-2 text-cyan-700 dark:text-cyan-600"
                 : "text-gray-500"
